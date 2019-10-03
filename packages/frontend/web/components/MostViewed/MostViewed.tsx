@@ -250,6 +250,32 @@ const buildSectionUrl = (sectionName?: string) => {
     return `https://api.nextgen.guardianapps.co.uk${endpoint}?dcr=true`;
 };
 
+function Trail({ trail, position }: { trail: Trail; position: number }) {
+    return (
+        <li
+            className={listItem}
+            key={trail.url}
+            data-link-name={`${position} | text`}
+        >
+            <span className={bigNumber}>
+                <BigNumber index={position} />
+            </span>
+            <h2 className={headlineHeader}>
+                <a
+                    className={headlineLink}
+                    href={trail.url}
+                    data-link-name={'article'}
+                >
+                    {trail.isLiveBlog && (
+                        <span className={liveKicker}>Live</span>
+                    )}
+                    {trail.linkText}
+                </a>
+            </h2>
+        </li>
+    );
+}
+
 interface Props {
     sectionName?: string;
     config: ConfigType;
@@ -332,33 +358,11 @@ export const MostViewed = ({ sectionName, config }: Props) => {
                             >
                                 {(tab.trails || []).map(
                                     (trail: Trail, ii: number) => (
-                                        <li
-                                            className={listItem}
+                                        <Trail
                                             key={trail.url}
-                                            data-link-name={`${ii + 1} | text`}
-                                        >
-                                            <span className={bigNumber}>
-                                                <BigNumber index={ii + 1} />
-                                            </span>
-                                            <h2 className={headlineHeader}>
-                                                <a
-                                                    className={headlineLink}
-                                                    href={trail.url}
-                                                    data-link-name={'article'}
-                                                >
-                                                    {trail.isLiveBlog && (
-                                                        <span
-                                                            className={
-                                                                liveKicker
-                                                            }
-                                                        >
-                                                            Live
-                                                        </span>
-                                                    )}
-                                                    {trail.linkText}
-                                                </a>
-                                            </h2>
-                                        </li>
+                                            trail={trail}
+                                            position={ii + 1}
+                                        />
                                     ),
                                 )}
                             </ol>
