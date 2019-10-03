@@ -230,15 +230,15 @@ const liveKicker = css`
     }
 `;
 
-interface Trail {
+interface TrailType {
     url: string;
     linkText: string;
     isLiveBlog: boolean;
 }
 
-interface Tab {
+interface TabType {
     heading: string;
-    trails: Trail[];
+    trails: TrailType[];
 }
 
 const buildSectionUrl = (sectionName?: string) => {
@@ -250,7 +250,7 @@ const buildSectionUrl = (sectionName?: string) => {
     return `https://api.nextgen.guardianapps.co.uk${endpoint}?dcr=true`;
 };
 
-function Trail({ trail, position }: { trail: Trail; position: number }) {
+function Trail({ trail, position }: { trail: TrailType; position: number }) {
     return (
         <li
             className={listItem}
@@ -308,7 +308,7 @@ export const MostViewed = ({ sectionName, config }: Props) => {
                 <div className={listContainer}>
                     {data && data.length > 1 && (
                         <ul className={tabsContainer} role="tablist">
-                            {data.map((tab: Tab, i: number) => (
+                            {data.map((tab: TabType, i: number) => (
                                 <li
                                     className={cx(listTab, {
                                         [selectedListTab]:
@@ -357,7 +357,7 @@ export const MostViewed = ({ sectionName, config }: Props) => {
                                 data-link-context={`most-read/${sectionName}`}
                             >
                                 {(tab.trails || []).map(
-                                    (trail: Trail, ii: number) => (
+                                    (trail: TrailType, ii: number) => (
                                         <Trail
                                             key={trail.url}
                                             trail={trail}
