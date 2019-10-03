@@ -427,31 +427,31 @@ export class MostViewed extends Component<Props, { selectedTabIndex: number }> {
         const endpoint = `/most-read${
             hasSection ? `/${this.props.sectionName}` : ''
         }.json`;
-        return new Promise((resolve, reject) => {
-            fetch(`https://api.nextgen.guardianapps.co.uk${endpoint}?dcr=true`)
-                .then(response => {
-                    if (!response.ok) {
-                        resolve([]);
-                    }
-                    return response.json();
-                })
-                .then(mostRead => {
-                    if (Array.isArray(mostRead)) {
-                        resolve(mostRead);
-                    }
-                    resolve([]);
-                })
-                .catch(err => {
-                    window.guardian.modules.raven.reportError(
-                        err,
-                        {
-                            feature: 'most-viewed',
-                        },
-                        true,
-                    );
+        return fetch(
+            `https://api.nextgen.guardianapps.co.uk${endpoint}?dcr=true`,
+        )
+            .then(response => {
+                if (!response.ok) {
+                    return [];
+                }
+                return response.json();
+            })
+            .then(mostRead => {
+                if (Array.isArray(mostRead)) {
+                    return mostRead;
+                }
+                return [];
+            })
+            .catch(err => {
+                window.guardian.modules.raven.reportError(
+                    err,
+                    {
+                        feature: 'most-viewed',
+                    },
+                    true,
+                );
 
-                    return resolve([]);
-                });
-        });
+                return [];
+            });
     };
 }
