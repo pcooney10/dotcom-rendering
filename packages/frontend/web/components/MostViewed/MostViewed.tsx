@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { css, cx } from 'emotion';
-import { textSans, headline, palette } from '@guardian/src-foundations';
+import { headline } from '@guardian/pasteup/typography';
+import { palette } from '@guardian/pasteup/palette';
 import {
     desktop,
     tablet,
@@ -10,10 +11,10 @@ import {
 } from '@guardian/pasteup/breakpoints';
 import { screenReaderOnly } from '@guardian/pasteup/mixins';
 import { BigNumber } from '@guardian/guui';
-import { AsyncClientComponent } from '../lib/AsyncClientComponent';
 import { namedAdSlotParameters } from '@frontend/model/advertisement';
 import { AdSlot } from '@frontend/web/components/AdSlot';
-import ClockIcon from '@guardian/pasteup/icons/clock.svg';
+
+import { callApi } from '../lib/api';
 
 const container = css`
     padding-top: 3px;
@@ -31,13 +32,14 @@ const mostPopularBody = css`
 `;
 
 const heading = css`
-    ${headline({ level: 2 })};
+    ${headline(4)};
     color: ${palette.neutral[7]};
     font-weight: 900;
     padding-right: 5px;
     padding-bottom: 4px;
 
     ${leftCol} {
+        ${headline(3)};
         width: 140px;
         position: relative;
 
@@ -156,7 +158,7 @@ const headlineLink = css`
     text-decoration: none;
     color: ${palette.neutral[7]};
     font-weight: 500;
-    ${headline({ level: 1 })};
+    ${headline(2)};
 `;
 
 const tabsContainer = css`
@@ -193,7 +195,7 @@ const selectedListTab = css`
 `;
 
 const tabButton = css`
-    ${headline({ level: 1 })};
+    ${headline(1)};
     margin: 0;
     border: 0;
     background: transparent;
@@ -210,6 +212,10 @@ const tabButton = css`
     &:hover {
         cursor: pointer;
     }
+
+    ${tablet} {
+        ${headline(2)};
+    }
 `;
 
 const liveKicker = css`
@@ -224,51 +230,10 @@ const liveKicker = css`
     }
 `;
 
-const oldArticleMessage = css`
-    ${textSans({ level: 1 })}
-    background: ${palette.yellow.main};
-    display: inline-block;
-    color: ${palette.neutral[7]};
-    margin: 4px 0 6px;
-    padding: 3px 5px;
-
-    svg {
-        fill: currentColor;
-    }
-
-    .embolden {
-        font-weight: bold;
-    }
-`;
-
-const oldClockWrapper = css`
-    margin-right: 3px;
-`;
-
-const AgeWarning: React.FC<{
-    ageWarning?: string;
-}> = ({ ageWarning }) => {
-    if (!ageWarning) {
-        return <></>;
-    }
-    return (
-        <div>
-            <div className={oldArticleMessage}>
-                <span className={oldClockWrapper}>
-                    <ClockIcon />
-                </span>
-                This article is more than{' '}
-                <span className="embolden">{ageWarning} old</span>
-            </div>
-        </div>
-    );
-};
-
 interface Trail {
     url: string;
     linkText: string;
     isLiveBlog: boolean;
-    ageWarning: string;
 }
 
 interface Tab {
@@ -276,172 +241,28 @@ interface Tab {
     trails: Trail[];
 }
 
+const buildSectionUrl = (sectionName?: string) => {
+    const sectionsWithoutPopular = ['info', 'global'];
+    const hasSection =
+        sectionName && !sectionsWithoutPopular.includes(sectionName);
+    const endpoint = `/most-read${hasSection ? `/${sectionName}` : ''}.json`;
+
+    return `https://api.nextgen.guardianapps.co.uk${endpoint}?dcr=true`;
+};
+
 interface Props {
     sectionName?: string;
     config: ConfigType;
 }
 
-export class MostViewed extends Component<Props, { selectedTabIndex: number }> {
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            selectedTabIndex: 0,
-        };
-    }
+export const MostViewed = ({ sectionName, config }: Props) => {
+    const [selectedTabIndex, setSelectedTabIndex] = useState<number>(0);
+    const [data, setData] = useState<any[]>([]);
 
-    public tabSelected(index: number) {
-        this.setState({
-            selectedTabIndex: index,
-        });
-    }
-
-    public render() {
-        return (
-            <div
-                className={container}
-                data-link-name={'most-viewed'}
-                data-component={'most-viewed'}
-            >
-                <h2 className={heading}>Most popular</h2>
-                <div className={mostPopularBody}>
-                    <AsyncClientComponent f={this.fetchTrails}>
-                        {({ data }) => (
-                            <div className={listContainer}>
-                                {Array.isArray(data) && data.length > 1 && (
-                                    <ul
-                                        className={tabsContainer}
-                                        role="tablist"
-                                    >
-                                        {(data || []).map((tab, i) => (
-                                            <li
-                                                className={cx(listTab, {
-                                                    [selectedListTab]:
-                                                        i ===
-                                                        this.state
-                                                            .selectedTabIndex,
-                                                })}
-                                                role="tab"
-                                                aria-selected={
-                                                    i ===
-                                                    this.state.selectedTabIndex
-                                                }
-                                                aria-controls={`tabs-popular-${i}`}
-                                                id={`tabs-popular-${i}-tab`}
-                                                key={`tabs-popular-${i}-tab`}
-                                            >
-                                                <button
-                                                    className={tabButton}
-                                                    onClick={() =>
-                                                        this.tabSelected(i)
-                                                    }
-                                                >
-                                                    <span
-                                                        className={css`
-                                                            ${screenReaderOnly};
-                                                        `}
-                                                    >
-                                                        Most viewed{' '}
-                                                    </span>
-                                                    <span // tslint:disable-line:react-no-dangerous-html
-                                                        // "Across The Guardian" has a non-breaking space entity between "The" and "Guardian"
-                                                        dangerouslySetInnerHTML={{
-                                                            __html: tab.heading,
-                                                        }}
-                                                    />
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                )}
-                                {(data || []).map((tab, i) => (
-                                    <ol
-                                        className={cx(list, {
-                                            [hideList]:
-                                                i !==
-                                                this.state.selectedTabIndex,
-                                        })}
-                                        id={`tabs-popular-${i}`}
-                                        key={`tabs-popular-${i}`}
-                                        role="tabpanel"
-                                        aria-labelledby={`tabs-popular-${i}-tab`}
-                                        data-link-name={tab.heading}
-                                        data-testid={tab.heading}
-                                        data-link-context={`most-read/${this.props.sectionName}`}
-                                    >
-                                        {(tab.trails || []).map((trail, ii) => (
-                                            <li
-                                                className={listItem}
-                                                key={trail.url}
-                                                data-link-name={`${ii +
-                                                    1} | text`}
-                                            >
-                                                <span className={bigNumber}>
-                                                    <BigNumber index={ii + 1} />
-                                                </span>
-                                                <h2 className={headlineHeader}>
-                                                    <a
-                                                        className={headlineLink}
-                                                        href={trail.url}
-                                                        data-link-name={
-                                                            'article'
-                                                        }
-                                                    >
-                                                        {trail.isLiveBlog && (
-                                                            <span
-                                                                className={
-                                                                    liveKicker
-                                                                }
-                                                            >
-                                                                Live
-                                                            </span>
-                                                        )}
-                                                        {trail.linkText}
-                                                        <AgeWarning
-                                                            ageWarning={
-                                                                trail.ageWarning
-                                                            }
-                                                        />
-                                                    </a>
-                                                </h2>
-                                            </li>
-                                        ))}
-                                    </ol>
-                                ))}
-                            </div>
-                        )}
-                    </AsyncClientComponent>
-                    <AdSlot
-                        asps={namedAdSlotParameters('most-popular')}
-                        config={this.props.config}
-                        className={''}
-                    />
-                </div>
-            </div>
-        );
-    }
-
-    public fetchTrails: () => Promise<Tab[]> = () => {
-        const sectionsWithoutPopular = ['info', 'global'];
-        const hasSection =
-            this.props.sectionName &&
-            !sectionsWithoutPopular.includes(this.props.sectionName);
-        const endpoint = `/most-read${
-            hasSection ? `/${this.props.sectionName}` : ''
-        }.json`;
-        return fetch(
-            `https://api.nextgen.guardianapps.co.uk${endpoint}?dcr=true`,
-        )
-            .then(response => {
-                if (!response.ok) {
-                    return [];
-                }
-                return response.json();
-            })
-            .then(mostRead => {
-                if (Array.isArray(mostRead)) {
-                    return mostRead;
-                }
-                return [];
+    useEffect(() => {
+        callApi(buildSectionUrl(sectionName))
+            .then(data => {
+                setData(data);
             })
             .catch(err => {
                 window.guardian.modules.raven.reportError(
@@ -454,5 +275,105 @@ export class MostViewed extends Component<Props, { selectedTabIndex: number }> {
 
                 return [];
             });
-    };
-}
+    }, [sectionName]);
+
+    return (
+        <div
+            className={container}
+            data-link-name={'most-viewed'}
+            data-component={'most-viewed'}
+        >
+            <h2 className={heading}>Most popular</h2>
+            <div className={mostPopularBody}>
+                <div className={listContainer}>
+                    {Array.isArray(data) && data.length > 1 && (
+                        <ul className={tabsContainer} role="tablist">
+                            {(data || []).map((tab: Tab, i: number) => (
+                                <li
+                                    className={cx(listTab, {
+                                        [selectedListTab]:
+                                            i === selectedTabIndex,
+                                    })}
+                                    role="tab"
+                                    aria-selected={i === selectedTabIndex}
+                                    aria-controls={`tabs-popular-${i}`}
+                                    id={`tabs-popular-${i}-tab`}
+                                    key={`tabs-popular-${i}-tab`}
+                                >
+                                    <button
+                                        className={tabButton}
+                                        onClick={() => setSelectedTabIndex(i)}
+                                    >
+                                        <span
+                                            className={css`
+                                                ${screenReaderOnly};
+                                            `}
+                                        >
+                                            Most viewed{' '}
+                                        </span>
+                                        <span // tslint:disable-line:react-no-dangerous-html
+                                            // "Across The Guardian" has a non-breaking space entity between "The" and "Guardian"
+                                            dangerouslySetInnerHTML={{
+                                                __html: tab.heading,
+                                            }}
+                                        />
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                    {(data || []).map((tab, i) => (
+                        <ol
+                            className={cx(list, {
+                                [hideList]: i !== selectedTabIndex,
+                            })}
+                            id={`tabs-popular-${i}`}
+                            key={`tabs-popular-${i}`}
+                            role="tabpanel"
+                            aria-labelledby={`tabs-popular-${i}-tab`}
+                            data-link-name={tab.heading}
+                            data-testid={tab.heading}
+                            data-link-context={`most-read/${sectionName}`}
+                        >
+                            {(tab.trails || []).map(
+                                (trail: Trail, ii: number) => (
+                                    <li
+                                        className={listItem}
+                                        key={trail.url}
+                                        data-link-name={`${ii + 1} | text`}
+                                    >
+                                        <span className={bigNumber}>
+                                            <BigNumber index={ii + 1} />
+                                        </span>
+                                        <h2 className={headlineHeader}>
+                                            <a
+                                                className={headlineLink}
+                                                href={trail.url}
+                                                data-link-name={'article'}
+                                            >
+                                                {trail.isLiveBlog && (
+                                                    <span
+                                                        className={liveKicker}
+                                                    >
+                                                        Live
+                                                    </span>
+                                                )}
+                                                {trail.linkText}
+                                            </a>
+                                        </h2>
+                                    </li>
+                                ),
+                            )}
+                        </ol>
+                    ))}
+                </div>
+                )}
+                <AdSlot
+                    asps={namedAdSlotParameters('most-popular')}
+                    config={config}
+                    className={''}
+                />
+            </div>
+        </div>
+    );
+};
