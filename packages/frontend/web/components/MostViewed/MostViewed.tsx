@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { css, cx } from 'emotion';
 import { headline } from '@guardian/pasteup/typography';
 import { palette } from '@guardian/pasteup/palette';
@@ -14,7 +14,7 @@ import { BigNumber } from '@guardian/guui';
 import { namedAdSlotParameters } from '@frontend/model/advertisement';
 import { AdSlot } from '@frontend/web/components/AdSlot';
 
-import { callApi } from '../lib/api';
+import { useApi } from '../lib/api';
 
 const container = css`
     padding-top: 3px;
@@ -257,25 +257,19 @@ interface Props {
 
 export const MostViewed = ({ sectionName, config }: Props) => {
     const [selectedTabIndex, setSelectedTabIndex] = useState<number>(0);
-    const [data, setData] = useState<any[]>([]);
 
-    useEffect(() => {
-        callApi(buildSectionUrl(sectionName))
-            .then(data => {
-                setData(data);
-            })
-            .catch(err => {
-                window.guardian.modules.raven.reportError(
-                    err,
-                    {
-                        feature: 'most-viewed',
-                    },
-                    true,
-                );
+    const url = buildSectionUrl(sectionName);
+    const { data, error } = useApi(url);
 
-                return [];
-            });
-    }, [sectionName]);
+    if (error) {
+        window.guardian.modules.raven.reportError(
+            error,
+            {
+                feature: 'most-viewed',
+            },
+            true,
+        );
+    }
 
     return (
         <div
@@ -286,9 +280,9 @@ export const MostViewed = ({ sectionName, config }: Props) => {
             <h2 className={heading}>Most popular</h2>
             <div className={mostPopularBody}>
                 <div className={listContainer}>
-                    {Array.isArray(data) && data.length > 1 && (
+                    {data && data.length > 1 && (
                         <ul className={tabsContainer} role="tablist">
-                            {(data || []).map((tab: Tab, i: number) => (
+                            {data.map((tab: Tab, i: number) => (
                                 <li
                                     className={cx(listTab, {
                                         [selectedListTab]:
@@ -322,50 +316,53 @@ export const MostViewed = ({ sectionName, config }: Props) => {
                             ))}
                         </ul>
                     )}
-                    {(data || []).map((tab, i) => (
-                        <ol
-                            className={cx(list, {
-                                [hideList]: i !== selectedTabIndex,
-                            })}
-                            id={`tabs-popular-${i}`}
-                            key={`tabs-popular-${i}`}
-                            role="tabpanel"
-                            aria-labelledby={`tabs-popular-${i}-tab`}
-                            data-link-name={tab.heading}
-                            data-testid={tab.heading}
-                            data-link-context={`most-read/${sectionName}`}
-                        >
-                            {(tab.trails || []).map(
-                                (trail: Trail, ii: number) => (
-                                    <li
-                                        className={listItem}
-                                        key={trail.url}
-                                        data-link-name={`${ii + 1} | text`}
-                                    >
-                                        <span className={bigNumber}>
-                                            <BigNumber index={ii + 1} />
-                                        </span>
-                                        <h2 className={headlineHeader}>
-                                            <a
-                                                className={headlineLink}
-                                                href={trail.url}
-                                                data-link-name={'article'}
-                                            >
-                                                {trail.isLiveBlog && (
-                                                    <span
-                                                        className={liveKicker}
-                                                    >
-                                                        Live
-                                                    </span>
-                                                )}
-                                                {trail.linkText}
-                                            </a>
-                                        </h2>
-                                    </li>
-                                ),
-                            )}
-                        </ol>
-                    ))}
+                    {data &&
+                        data.map((tab, i) => (
+                            <ol
+                                className={cx(list, {
+                                    [hideList]: i !== selectedTabIndex,
+                                })}
+                                id={`tabs-popular-${i}`}
+                                key={`tabs-popular-${i}`}
+                                role="tabpanel"
+                                aria-labelledby={`tabs-popular-${i}-tab`}
+                                data-link-name={tab.heading}
+                                data-testid={tab.heading}
+                                data-link-context={`most-read/${sectionName}`}
+                            >
+                                {(tab.trails || []).map(
+                                    (trail: Trail, ii: number) => (
+                                        <li
+                                            className={listItem}
+                                            key={trail.url}
+                                            data-link-name={`${ii + 1} | text`}
+                                        >
+                                            <span className={bigNumber}>
+                                                <BigNumber index={ii + 1} />
+                                            </span>
+                                            <h2 className={headlineHeader}>
+                                                <a
+                                                    className={headlineLink}
+                                                    href={trail.url}
+                                                    data-link-name={'article'}
+                                                >
+                                                    {trail.isLiveBlog && (
+                                                        <span
+                                                            className={
+                                                                liveKicker
+                                                            }
+                                                        >
+                                                            Live
+                                                        </span>
+                                                    )}
+                                                    {trail.linkText}
+                                                </a>
+                                            </h2>
+                                        </li>
+                                    ),
+                                )}
+                            </ol>
+                        ))}
                 </div>
                 )}
                 <AdSlot
