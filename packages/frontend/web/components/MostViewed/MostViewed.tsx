@@ -10,7 +10,7 @@ import {
 } from '@guardian/pasteup/breakpoints';
 import { screenReaderOnly } from '@guardian/pasteup/mixins';
 import { BigNumber } from '@guardian/guui';
-import { AsyncClientComponent } from './lib/AsyncClientComponent';
+import { AsyncClientComponent } from '../lib/AsyncClientComponent';
 import { namedAdSlotParameters } from '@frontend/model/advertisement';
 import { AdSlot } from '@frontend/web/components/AdSlot';
 import ClockIcon from '@guardian/pasteup/icons/clock.svg';
