@@ -72,84 +72,15 @@ const listContainer = css`
     }
 `;
 
-const list = css`
-    margin-top: 12px;
-
-    ${tablet} {
-        border-top: 1px solid ${palette.neutral[86]};
-        width: 620px;
-        min-height: 300px;
-        column-width: 300px;
-        column-gap: 20px;
-        column-fill: balance;
-        column-count: 2;
-    }
-`;
-
-const hideList = css`
-    display: none;
-`;
-
-const listItem = css`
-    position: relative;
-    box-sizing: border-box;
-    padding-top: 4px;
-    padding-bottom: 24px;
-
-    &:before {
-        position: absolute;
-        top: 0;
-        right: 10px;
-        left: 0;
-        content: '';
-        display: block;
-        width: 100%;
-        height: 1px;
-        background-color: ${palette.neutral[86]};
-    }
-
-    :first-of-type {
-        &:before {
-            display: none;
-        }
-    }
-
-    &:after {
-        content: '';
-        display: block;
-        clear: both;
-    }
-
-    ${tablet} {
-        padding-top: 3px;
-        padding-bottom: 0;
-        min-height: 72px;
-    }
-
-    ${desktop} {
-        height: 100%;
-        display: inline-block;
-        width: 100%;
-
-        :nth-of-type(6) {
-            &:before {
-                display: none;
-            }
-        }
-    }
-`;
-
 const bigNumber = css`
-    float: left;
-    margin-top: 3px;
+    position: absolute;
+    top: 0.375rem;
+    left: 0.625rem;
     fill: ${palette.neutral[7]};
 `;
 
 const headlineHeader = css`
-    margin-top: -4px;
-    margin-left: 70px;
-    padding-top: 2px;
-    padding-bottom: 2px;
+    padding: 0.1875rem 0.625rem 1.125rem 4.6875rem;
     word-wrap: break-word;
     overflow: hidden;
 `;
@@ -250,6 +181,40 @@ const buildSectionUrl = (sectionName?: string) => {
     return `https://api.nextgen.guardianapps.co.uk${endpoint}?dcr=true`;
 };
 
+const hideList = css`
+    display: none;
+`;
+
+const gridContainer = css`
+    /* We're using grid to layout the most viewed list here.
+    By choosing grid-auto-flow: column; we don't need any grid item css and
+    the defaults should just work. */
+    display: grid;
+    grid-auto-flow: column;
+
+    /* One column view */
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto auto auto auto auto auto auto;
+
+    /* Two column view */
+    ${tablet} {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto auto auto auto;
+    }
+`;
+
+const gridItem = css`
+    position: relative;
+    box-sizing: border-box;
+    border: 1px solid ${palette.neutral[86]};
+
+    ${tablet} {
+        padding-top: 3px;
+        padding-bottom: 0;
+        min-height: 72px;
+    }
+`;
+
 function TrailItem({
     trail,
     position,
@@ -259,7 +224,7 @@ function TrailItem({
 }) {
     return (
         <li
-            className={listItem}
+            className={gridItem}
             key={trail.url}
             data-link-name={`${position} | text`}
         >
@@ -352,7 +317,7 @@ export const MostViewed = ({ sectionName, config }: Props) => {
                     {data &&
                         data.map(({ trails, heading }, i: number) => (
                             <ol
-                                className={cx(list, {
+                                className={cx(gridContainer, {
                                     [hideList]: i !== selectedTabIndex,
                                 })}
                                 id={`tabs-popular-${i}`}
@@ -373,7 +338,6 @@ export const MostViewed = ({ sectionName, config }: Props) => {
                                 <TrailItem trail={trails[7]} position={8} />
                                 <TrailItem trail={trails[8]} position={9} />
                                 <TrailItem trail={trails[9]} position={10} />
-                                                          
                             </ol>
                         ))}
                 </div>
