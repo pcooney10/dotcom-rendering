@@ -12,6 +12,7 @@ const gridItem = css`
     /* box-sizing: border-box; */
     border-top: 1px solid ${palette.neutral[86]};
     border-right: 1px solid ${palette.neutral[86]};
+    min-height: 3.25rem;
 
     &:hover {
         cursor: pointer;
