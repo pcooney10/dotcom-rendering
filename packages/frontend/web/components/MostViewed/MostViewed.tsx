@@ -216,7 +216,7 @@ const gridItem = css`
 
     &:hover,
     :focus {
-        background: #f6f6f6;
+        background: ${palette.neutral[97]};
     }
 `;
 
