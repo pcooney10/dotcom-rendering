@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 
 function checkForErrors(response: any) {
-    if (!response.ok) throw Error(response.statusText);
+    if (!response.ok) {
+        throw Error(response.statusText);
+    }
     return response;
 }
 
@@ -26,14 +28,14 @@ export const useApi = (url: string) => {
         callApi(url)
             .then(data => {
                 setRequest({
-                    loading: false,
                     data,
+                    loading: false,
                 });
             })
             .catch(error => {
                 setRequest({
-                    loading: false,
                     error,
+                    loading: false,
                 });
             });
     }, [url]);

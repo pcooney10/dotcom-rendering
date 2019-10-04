@@ -27,7 +27,7 @@ const mostPopularBody = css`
     }
 `;
 
-const heading = css`
+const headingStyles = css`
     ${headline(4)};
     color: ${palette.neutral[7]};
     font-weight: 900;
@@ -173,19 +173,17 @@ interface Props {
     config: ConfigType;
 }
 
+function buildSectionUrl(sectionName?: string) {
+    const sectionsWithoutPopular = ['info', 'global'];
+    const hasSection =
+        sectionName && !sectionsWithoutPopular.includes(sectionName);
+    const endpoint = `/most-read${hasSection ? `/${sectionName}` : ''}.json`;
+
+    return `https://api.nextgen.guardianapps.co.uk${endpoint}?dcr=true`;
+}
+
 export const MostViewed = ({ sectionName, config }: Props) => {
     const [selectedTabIndex, setSelectedTabIndex] = useState<number>(0);
-
-    function buildSectionUrl(sectionName?: string) {
-        const sectionsWithoutPopular = ['info', 'global'];
-        const hasSection =
-            sectionName && !sectionsWithoutPopular.includes(sectionName);
-        const endpoint = `/most-read${
-            hasSection ? `/${sectionName}` : ''
-        }.json`;
-
-        return `https://api.nextgen.guardianapps.co.uk${endpoint}?dcr=true`;
-    }
 
     const url = buildSectionUrl(sectionName);
     const { data, error } = useApi(url);
@@ -208,7 +206,7 @@ export const MostViewed = ({ sectionName, config }: Props) => {
         >
             <div className={cx(pageMargins, resetPadding)}>
                 <header>
-                    <h2 className={heading}>Most popular</h2>
+                    <h2 className={headingStyles}>Most popular</h2>
                     <div className={mostPopularBody}>
                         <div className={listContainer}>
                             {data && data.length > 1 && (
