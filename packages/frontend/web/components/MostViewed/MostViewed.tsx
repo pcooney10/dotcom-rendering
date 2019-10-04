@@ -2,17 +2,11 @@ import React, { useState } from 'react';
 import { css, cx } from 'emotion';
 import { headline } from '@guardian/pasteup/typography';
 import { palette } from '@guardian/pasteup/palette';
-import {
-    desktop,
-    tablet,
-    leftCol,
-    wide,
-    phablet,
-} from '@guardian/pasteup/breakpoints';
+import { desktop, tablet, leftCol, wide } from '@guardian/pasteup/breakpoints';
 import { screenReaderOnly } from '@guardian/pasteup/mixins';
-import { BigNumber } from '@guardian/guui';
 import { namedAdSlotParameters } from '@frontend/model/advertisement';
 import { AdSlot } from '@frontend/web/components/AdSlot';
+import { TrailItem } from './TrailItem';
 
 import { useApi } from '../lib/api';
 
@@ -60,26 +54,6 @@ const listContainer = css`
     border-right: ${thinGreySolid};
 `;
 
-const bigNumber = css`
-    position: absolute;
-    top: 0.375rem;
-    left: 0.625rem;
-    fill: ${palette.neutral[7]};
-`;
-
-const headlineHeader = css`
-    padding: 0.1875rem 0.625rem 1.125rem 4.6875rem;
-    word-wrap: break-word;
-    overflow: hidden;
-`;
-
-const headlineLink = css`
-    text-decoration: none;
-    color: ${palette.neutral[7]};
-    font-weight: 500;
-    ${headline(2)};
-`;
-
 const tabsContainer = css`
     display: flex;
     position: relative;
@@ -94,7 +68,6 @@ const listTab = css`
     font-weight: 700;
     line-height: 1.1;
     background-color: transparent;
-    /* box-sizing: border-box; */
     text-transform: capitalize;
     padding: 8px 0.625rem 0;
     margin-bottom: 16px;
@@ -136,19 +109,7 @@ const tabButton = css`
     }
 `;
 
-const liveKicker = css`
-    color: ${palette.news.main};
-    font-weight: 700;
-
-    &::after {
-        content: '/';
-        display: inline-block;
-        font-weight: 900;
-        margin: 0 4px;
-    }
-`;
-
-interface TrailType {
+export interface TrailType {
     url: string;
     linkText: string;
     isLiveBlog: boolean;
@@ -158,15 +119,6 @@ interface TabType {
     heading: string;
     trails: TrailType[];
 }
-
-const buildSectionUrl = (sectionName?: string) => {
-    const sectionsWithoutPopular = ['info', 'global'];
-    const hasSection =
-        sectionName && !sectionsWithoutPopular.includes(sectionName);
-    const endpoint = `/most-read${hasSection ? `/${sectionName}` : ''}.json`;
-
-    return `https://api.nextgen.guardianapps.co.uk${endpoint}?dcr=true`;
-};
 
 const adSpacing = css`
     margin: 0.375rem 0 0 0.625rem;
@@ -198,60 +150,6 @@ const gridContainer = css`
     border-left: ${thinGreySolid};
 `;
 
-const gridItem = css`
-    position: relative;
-    /* box-sizing: border-box; */
-    border-top: ${thinGreySolid};
-    border-right: ${thinGreySolid};
-
-    ${tablet} {
-        padding-top: 3px;
-        padding-bottom: 0;
-        min-height: 72px;
-    }
-
-    &:hover {
-        cursor: pointer;
-    }
-
-    &:hover,
-    :focus {
-        background: ${palette.neutral[97]};
-    }
-`;
-
-function TrailItem({
-    trail,
-    position,
-}: {
-    trail: TrailType;
-    position: number;
-}) {
-    return (
-        <li
-            className={gridItem}
-            key={trail.url}
-            data-link-name={`${position} | text`}
-        >
-            <span className={bigNumber}>
-                <BigNumber index={position} />
-            </span>
-            <h2 className={headlineHeader}>
-                <a
-                    className={headlineLink}
-                    href={trail.url}
-                    data-link-name={'article'}
-                >
-                    {trail.isLiveBlog && (
-                        <span className={liveKicker}>Live</span>
-                    )}
-                    {trail.linkText}
-                </a>
-            </h2>
-        </li>
-    );
-}
-
 interface Props {
     sectionName?: string;
     config: ConfigType;
@@ -259,6 +157,17 @@ interface Props {
 
 export const MostViewed = ({ sectionName, config }: Props) => {
     const [selectedTabIndex, setSelectedTabIndex] = useState<number>(0);
+
+    function buildSectionUrl(sectionName?: string) {
+        const sectionsWithoutPopular = ['info', 'global'];
+        const hasSection =
+            sectionName && !sectionsWithoutPopular.includes(sectionName);
+        const endpoint = `/most-read${
+            hasSection ? `/${sectionName}` : ''
+        }.json`;
+
+        return `https://api.nextgen.guardianapps.co.uk${endpoint}?dcr=true`;
+    }
 
     const url = buildSectionUrl(sectionName);
     const { data, error } = useApi(url);
