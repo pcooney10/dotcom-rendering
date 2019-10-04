@@ -31,7 +31,7 @@ import { SeriesSectionLink } from './SeriesSectionLink';
 
 const curly = (x: any) => x;
 
-const wrapper = css`
+export const pageMargins = css`
     padding-top: 6px;
     margin-right: 0;
     margin-left: 0;
@@ -367,7 +367,7 @@ const metaExtras = css`
     }
 `;
 
-const header = css`
+export const marginBelowPhablet = css`
     ${until.phablet} {
         margin: 0 -10px;
     }
@@ -411,8 +411,8 @@ export const ArticleBody: React.FC<{
     const sharingUrls = getSharingUrls(CAPI.pageId, CAPI.webTitle);
     const ageWarning = getAgeWarning(CAPI.tags, CAPI.webPublicationDate);
     return (
-        <div className={wrapper}>
-            <header className={header}>
+        <div className={pageMargins}>
+            <header className={marginBelowPhablet}>
                 <div className={section}>
                     <SeriesSectionLink CAPI={CAPI} fallbackToSection={true} />
                 </div>
