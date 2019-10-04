@@ -16,18 +16,18 @@ import { AdSlot } from '@frontend/web/components/AdSlot';
 
 import { useApi } from '../lib/api';
 
-const container = css`
-    padding-top: 3px;
+const thinGreySolid = `1px solid ${palette.neutral[86]}`;
 
-    ${desktop} {
-        padding-top: 6px;
-    }
+const flexContainer = css`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 `;
 
 const mostPopularBody = css`
     ${desktop} {
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
     }
 `;
 
@@ -37,39 +37,27 @@ const heading = css`
     font-weight: 900;
     padding-right: 5px;
     padding-bottom: 4px;
+    padding-top: 3px;
+
+    ${desktop} {
+        padding-top: 6px;
+    }
 
     ${leftCol} {
         ${headline(3)};
         width: 140px;
         position: relative;
-
-        :after {
-            content: '';
-            display: block;
-            position: absolute;
-            height: 30px;
-            width: 1px;
-            background-color: ${palette.neutral[86]};
-            right: -11px;
-            top: -6px;
-        }
     }
 
     ${wide} {
-        width: 220px;
+        width: 454px;
     }
 `;
 
 const listContainer = css`
-    max-width: 460px;
-
-    ${leftCol} {
-        margin-left: 160px;
-    }
-
-    ${wide} {
-        margin-left: 230px;
-    }
+    max-width: 60rem;
+    border-left: ${thinGreySolid};
+    border-right: ${thinGreySolid};
 `;
 
 const bigNumber = css`
@@ -93,17 +81,9 @@ const headlineLink = css`
 `;
 
 const tabsContainer = css`
-    border-bottom: 1px solid ${palette.neutral[86]};
-
-    &::after {
-        content: '';
-        display: block;
-        clear: left;
-
-        ${tablet} {
-            display: none;
-        }
-    }
+    display: flex;
+    position: relative;
+    border-bottom: ${thinGreySolid};
 
     ${tablet} {
         border-bottom: 0;
@@ -111,18 +91,30 @@ const tabsContainer = css`
 `;
 
 const listTab = css`
-    width: 50%;
-    float: left;
-    border-top: 3px solid ${palette.neutral[93]};
-    background-color: ${palette.neutral[93]};
+    font-weight: 700;
+    line-height: 1.1;
+    background-color: transparent;
+    /* box-sizing: border-box; */
+    text-transform: capitalize;
+    padding: 8px 0.625rem 0;
+    margin-bottom: 16px;
+`;
 
-    ${phablet} {
-        width: 230px;
-    }
+const firstTab = css`
+    border-right: ${thinGreySolid};
 `;
 
 const selectedListTab = css`
-    background-color: ${palette.neutral[100]};
+    /* TODO: Using a pseudo selector here could be faster? */
+    box-shadow: inset 0px 4px 0px 0px ${palette.news.main};
+    transition: box-shadow 0.3s ease-in-out;
+`;
+
+const unselectedListTab = css`
+    &:hover {
+        box-shadow: inset 0px 4px 0px 0px ${palette.neutral[86]};
+        transition: box-shadow 0.3s ease-in-out;
+    }
 `;
 
 const tabButton = css`
@@ -130,13 +122,8 @@ const tabButton = css`
     margin: 0;
     border: 0;
     background: transparent;
-    padding-left: 10px;
-    padding-right: 6px;
-    padding-top: 4px;
-    text-align: left;
     text-decoration: none;
     font-weight: 600;
-    min-height: 36px;
     display: block;
     width: 100%;
 
@@ -181,6 +168,10 @@ const buildSectionUrl = (sectionName?: string) => {
     return `https://api.nextgen.guardianapps.co.uk${endpoint}?dcr=true`;
 };
 
+const adSpacing = css`
+    margin: 0.375rem 0 0 0.625rem;
+`;
+
 const hideList = css`
     display: none;
 `;
@@ -201,17 +192,31 @@ const gridContainer = css`
         grid-template-columns: 1fr 1fr;
         grid-template-rows: auto auto auto auto auto;
     }
+
+    /* We set left border on the grid container, and then right border on
+    the gridItems to prevent borders doubling up */
+    border-left: ${thinGreySolid};
 `;
 
 const gridItem = css`
     position: relative;
-    box-sizing: border-box;
-    border: 1px solid ${palette.neutral[86]};
+    /* box-sizing: border-box; */
+    border-top: ${thinGreySolid};
+    border-right: ${thinGreySolid};
 
     ${tablet} {
         padding-top: 3px;
         padding-bottom: 0;
         min-height: 72px;
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &:hover,
+    :focus {
+        background: #f6f6f6;
     }
 `;
 
@@ -270,7 +275,7 @@ export const MostViewed = ({ sectionName, config }: Props) => {
 
     return (
         <div
-            className={container}
+            className={flexContainer}
             data-link-name={'most-viewed'}
             data-component={'most-viewed'}
         >
@@ -284,6 +289,9 @@ export const MostViewed = ({ sectionName, config }: Props) => {
                                     className={cx(listTab, {
                                         [selectedListTab]:
                                             i === selectedTabIndex,
+                                        [unselectedListTab]:
+                                            i !== selectedTabIndex,
+                                        [firstTab]: i === 0,
                                     })}
                                     role="tab"
                                     aria-selected={i === selectedTabIndex}
@@ -313,7 +321,8 @@ export const MostViewed = ({ sectionName, config }: Props) => {
                             ))}
                         </ul>
                     )}
-                     
+                </div>
+                <div>
                     {data &&
                         data.map(({ trails, heading }, i: number) => (
                             <ol
@@ -341,6 +350,8 @@ export const MostViewed = ({ sectionName, config }: Props) => {
                             </ol>
                         ))}
                 </div>
+            </div>
+            <div className={adSpacing}>
                 <AdSlot
                     asps={namedAdSlotParameters('most-popular')}
                     config={config}
