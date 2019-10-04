@@ -250,7 +250,13 @@ const buildSectionUrl = (sectionName?: string) => {
     return `https://api.nextgen.guardianapps.co.uk${endpoint}?dcr=true`;
 };
 
-function Trail({ trail, position }: { trail: TrailType; position: number }) {
+function TrailItem({
+    trail,
+    position,
+}: {
+    trail: TrailType;
+    position: number;
+}) {
     return (
         <li
             className={listItem}
@@ -358,7 +364,7 @@ export const MostViewed = ({ sectionName, config }: Props) => {
                             >
                                 {(tab.trails || []).map(
                                     (trail: TrailType, ii: number) => (
-                                        <Trail
+                                        <TrailItem
                                             key={trail.url}
                                             trail={trail}
                                             position={ii + 1}
