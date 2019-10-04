@@ -374,7 +374,6 @@ export const MostViewed = ({ sectionName, config }: Props) => {
                             </ol>
                         ))}
                 </div>
-                )}
                 <AdSlot
                     asps={namedAdSlotParameters('most-popular')}
                     config={config}
