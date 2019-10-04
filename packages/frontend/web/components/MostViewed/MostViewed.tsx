@@ -350,7 +350,7 @@ export const MostViewed = ({ sectionName, config }: Props) => {
                     )}
                      
                     {data &&
-                        data.map((tab: TabType, i: number) => (
+                        data.map(({ trails, heading }, i: number) => (
                             <ol
                                 className={cx(list, {
                                     [hideList]: i !== selectedTabIndex,
@@ -359,23 +359,20 @@ export const MostViewed = ({ sectionName, config }: Props) => {
                                 key={`tabs-popular-${i}`}
                                 role="tabpanel"
                                 aria-labelledby={`tabs-popular-${i}-tab`}
-                                data-link-name={tab.heading}
-                                data-testid={tab.heading}
+                                data-link-name={heading}
+                                data-testid={heading}
                                 data-link-context={`most-read/${sectionName}`}
                             >
-                                <TrailItem trail={tab.trails[0]} position={1} />
-                                <TrailItem trail={tab.trails[1]} position={2} />
-                                <TrailItem trail={tab.trails[2]} position={3} />
-                                <TrailItem trail={tab.trails[3]} position={4} />
-                                <TrailItem trail={tab.trails[4]} position={5} />
-                                <TrailItem trail={tab.trails[5]} position={6} />
-                                <TrailItem trail={tab.trails[6]} position={7} />
-                                <TrailItem trail={tab.trails[7]} position={8} />
-                                <TrailItem trail={tab.trails[8]} position={9} />
-                                <TrailItem
-                                    trail={tab.trails[9]}
-                                    position={10}
-                                />
+                                <TrailItem trail={trails[0]} position={1} />
+                                <TrailItem trail={trails[1]} position={2} />
+                                <TrailItem trail={trails[2]} position={3} />
+                                <TrailItem trail={trails[3]} position={4} />
+                                <TrailItem trail={trails[4]} position={5} />
+                                <TrailItem trail={trails[5]} position={6} />
+                                <TrailItem trail={trails[6]} position={7} />
+                                <TrailItem trail={trails[7]} position={8} />
+                                <TrailItem trail={trails[8]} position={9} />
+                                <TrailItem trail={trails[9]} position={10} />
                                                           
                             </ol>
                         ))}
