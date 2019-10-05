@@ -3,16 +3,12 @@ import { css, cx } from 'emotion';
 import { headline } from '@guardian/pasteup/typography';
 import { palette } from '@guardian/pasteup/palette';
 import { tablet, leftCol } from '@guardian/pasteup/breakpoints';
+import { pillarPalette } from '@frontend/lib/pillars';
 
 import { screenReaderOnly } from '@guardian/pasteup/mixins';
 
 import { TrailType } from './MostViewed';
 import { TrailItem } from './TrailItem';
-
-interface TabType {
-    heading: string;
-    trails: TrailType[];
-}
 
 const thinGreySolid = `1px solid ${palette.neutral[86]}`;
 
@@ -45,9 +41,9 @@ const firstTab = css`
     border-right: ${thinGreySolid};
 `;
 
-const selectedListTab = css`
+const selectedListTab = (pillar: Pillar) => css`
     /* TODO: Using a pseudo selector here could be faster? */
-    box-shadow: inset 0px 4px 0px 0px ${palette.news.main};
+    box-shadow: inset 0px 4px 0px 0px ${pillar && pillarPalette[pillar].dark};
     transition: box-shadow 0.3s ease-in-out;
 `;
 
@@ -100,12 +96,18 @@ const gridContainer = css`
     border-left: 1px solid ${palette.neutral[86]};
 `;
 
+interface TabType {
+    heading: string;
+    trails: TrailType[];
+}
+
 type Props = {
     data: any;
     sectionName?: string;
+    pillar: Pillar;
 };
 
-export const Trails = ({ data, sectionName }: Props) => {
+export const Trails = ({ data, sectionName, pillar }: Props) => {
     const [selectedTabIndex, setSelectedTabIndex] = useState<number>(0);
 
     return (
@@ -116,7 +118,8 @@ export const Trails = ({ data, sectionName }: Props) => {
                         {data.map((tab: TabType, i: number) => (
                             <li
                                 className={cx(listTab, {
-                                    [selectedListTab]: i === selectedTabIndex,
+                                    [selectedListTab(pillar)]:
+                                        i === selectedTabIndex,
                                     [unselectedListTab]: i !== selectedTabIndex,
                                     [firstTab]: i === 0,
                                 })}

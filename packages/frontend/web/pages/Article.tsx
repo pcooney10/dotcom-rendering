@@ -197,6 +197,7 @@ export const Article: React.FC<{
                 <MostViewed
                     sectionName={data.CAPI.sectionName}
                     config={data.config}
+                    pillar={data.CAPI.pillar}
                 />
             </Container>
         </main>

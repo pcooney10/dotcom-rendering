@@ -74,6 +74,7 @@ export interface TrailType {
 interface Props {
     sectionName?: string;
     config: ConfigType;
+    pillar: Pillar;
 }
 
 function buildSectionUrl(sectionName?: string) {
@@ -85,7 +86,7 @@ function buildSectionUrl(sectionName?: string) {
     return `https://api.nextgen.guardianapps.co.uk${endpoint}?dcr=true`;
 }
 
-export const MostViewed = ({ sectionName, config }: Props) => {
+export const MostViewed = ({ sectionName, config, pillar }: Props) => {
     const url = buildSectionUrl(sectionName);
     const { data, error } = useApi(url);
 
@@ -109,7 +110,7 @@ export const MostViewed = ({ sectionName, config }: Props) => {
                 <h2 className={headingStyles}>Most popular</h2>
             </section>
             <section className={contentStyles}>
-                <Trails data={data} sectionName={sectionName} />
+                <Trails data={data} sectionName={sectionName} pillar={pillar} />
                 <div className={adStyles}>
                     <AdSlot
                         asps={namedAdSlotParameters('most-popular')}

@@ -40,7 +40,11 @@ describe('MostViewed', () => {
         useApi.mockReturnValue(responseWithTwoTabs);
 
         const { getByText, getAllByText, getByTestId } = render(
-            <MostViewed config={config} sectionName="Section Name" />,
+            <MostViewed
+                config={config}
+                sectionName="Section Name"
+                pillar="news"
+            />,
         );
 
         // Calls api once only
@@ -65,7 +69,11 @@ describe('MostViewed', () => {
         useApi.mockReturnValue(responseWithTwoTabs);
 
         const { getByTestId, getByText } = render(
-            <MostViewed config={config} sectionName="Section Name" />,
+            <MostViewed
+                config={config}
+                sectionName="Section Name"
+                pillar="news"
+            />,
         );
 
         const firstHeading = responseWithTwoTabs.data[0].heading;
@@ -90,7 +98,11 @@ describe('MostViewed', () => {
         useApi.mockReturnValue(responseWithOneTab);
 
         const { queryByText } = render(
-            <MostViewed config={config} sectionName="Section Name" />,
+            <MostViewed
+                config={config}
+                sectionName="Section Name"
+                pillar="news"
+            />,
         );
 
         expect(
@@ -103,7 +115,11 @@ describe('MostViewed', () => {
         useApi.mockReturnValue(responseWithTwoTabs);
 
         const { getByText } = render(
-            <MostViewed config={config} sectionName="Section Name" />,
+            <MostViewed
+                config={config}
+                sectionName="Section Name"
+                pillar="news"
+            />,
         );
 
         expect(
