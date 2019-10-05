@@ -126,4 +126,8 @@ describe('MostViewed', () => {
             getByText(responseWithTwoTabs.data[0].trails[9].byline),
         ).toBeInTheDocument();
     });
+
+    it.todo("should display the text 'Live' for live blogs");
+
+    it.todo('should show the quote icon for comment articles');
 });

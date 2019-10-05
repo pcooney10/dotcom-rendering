@@ -7,6 +7,7 @@ import { headline } from '@guardian/pasteup/typography';
 
 import { TrailType } from './MostViewed';
 import { PulsingDot } from './PulsingDot';
+import { QuoteIcon } from './QuoteIcon';
 
 const gridItem = css`
     position: relative;
@@ -89,6 +90,10 @@ export const TrailItem = ({ trail, position }: Props) => (
                         <PulsingDot colour={getColour(trail)} /> Live
                     </span>
                 )}
+                {/* TODO: The api response needs to contain the pillar for the article so we can
+                          decide when to show the quote icon. Replace  `isLiveBlog` below with
+                          `isOpinion` or similar */}
+                {trail.isLiveBlog && <QuoteIcon colour={getColour(trail)} />}
                 {trail.linkText}
             </a>
         </h2>
