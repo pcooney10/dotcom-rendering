@@ -6,6 +6,7 @@ import { palette } from '@guardian/pasteup/palette';
 import { headline } from '@guardian/pasteup/typography';
 
 import { TrailType } from './MostViewed';
+import { PulsingDot } from './PulsingDot';
 
 const gridItem = css`
     position: relative;
@@ -44,8 +45,8 @@ const headlineLink = css`
     ${headline(2)};
 `;
 
-const liveKicker = css`
-    color: ${palette.news.main};
+const liveKicker = (colour: string) => css`
+    color: ${colour};
     font-weight: 700;
 
     &::after {
@@ -56,34 +57,40 @@ const liveKicker = css`
     }
 `;
 
-export const TrailItem = ({
-    trail,
-    position,
-}: {
+function getColour(trail: TrailType) {
+    // TODO: The trail object returned from the api does not include the pillar for the
+    //       the article. Once it does, replace 'green' below with the colour of the
+    //       relevant pillar.
+    return 'green';
+}
+
+interface Props {
     trail: TrailType;
     position: number;
-}) => {
-    return (
-        <li
-            className={gridItem}
-            key={trail.url}
-            data-link-name={`${position} | text`}
-        >
-            <span className={bigNumber}>
-                <BigNumber index={position} />
-            </span>
-            <h2 className={headlineHeader}>
-                <a
-                    className={headlineLink}
-                    href={trail.url}
-                    data-link-name={'article'}
-                >
-                    {trail.isLiveBlog && (
-                        <span className={liveKicker}>Live</span>
-                    )}
-                    {trail.linkText}
-                </a>
-            </h2>
-        </li>
-    );
-};
+}
+
+export const TrailItem = ({ trail, position }: Props) => (
+    <li
+        className={gridItem}
+        key={trail.url}
+        data-link-name={`${position} | text`}
+    >
+        <span className={bigNumber}>
+            <BigNumber index={position} />
+        </span>
+        <h2 className={headlineHeader}>
+            <a
+                className={headlineLink}
+                href={trail.url}
+                data-link-name={'article'}
+            >
+                {trail.isLiveBlog && (
+                    <span className={liveKicker(getColour(trail))}>
+                        <PulsingDot colour={getColour(trail)} /> Live
+                    </span>
+                )}
+                {trail.linkText}
+            </a>
+        </h2>
+    </li>
+);
