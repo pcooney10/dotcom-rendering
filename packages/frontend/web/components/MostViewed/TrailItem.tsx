@@ -62,7 +62,7 @@ const liveKicker = (colour: string) => css`
 function getColour(trail: TrailType) {
     // TODO: The trail object returned from the api does not include the pillar for the
     //       the article. Once it does, replace 'news' below with the relevant pillar
-    return pillarPalette['news'].dark;
+    return pillarPalette.news.dark;
 }
 
 interface Props {
