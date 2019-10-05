@@ -4,10 +4,11 @@ import { css } from 'emotion';
 import { BigNumber } from '@guardian/guui';
 import { palette } from '@guardian/pasteup/palette';
 import { headline } from '@guardian/pasteup/typography';
+import { pillarPalette } from '@frontend/lib/pillars';
 
 import { TrailType } from './MostViewed';
 import { PulsingDot } from './PulsingDot';
-import { QuoteIcon } from './QuoteIcon';
+// import { QuoteIcon } from './QuoteIcon';
 
 const gridItem = css`
     position: relative;
@@ -60,9 +61,8 @@ const liveKicker = (colour: string) => css`
 
 function getColour(trail: TrailType) {
     // TODO: The trail object returned from the api does not include the pillar for the
-    //       the article. Once it does, replace 'green' below with the colour of the
-    //       relevant pillar.
-    return 'green';
+    //       the article. Once it does, replace 'news' below with the relevant pillar
+    return pillarPalette['news'].dark;
 }
 
 interface Props {
@@ -91,9 +91,9 @@ export const TrailItem = ({ trail, position }: Props) => (
                     </span>
                 )}
                 {/* TODO: The api response needs to contain the pillar for the article so we can
-                          decide when to show the quote icon. Replace  `isLiveBlog` below with
-                          `isOpinion` or similar */}
-                {trail.isLiveBlog && <QuoteIcon colour={getColour(trail)} />}
+                          decide when to show the quote icon. Replace  `isOpinion` below with
+                          the correct check once the api has been updated */}
+                {/* {trail.isOpinion && <QuoteIcon colour={getColour(trail)} />} */}
                 {trail.linkText}
             </a>
         </h2>
