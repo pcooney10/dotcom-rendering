@@ -10,21 +10,43 @@ import { TrailItem } from './TrailItem';
 
 import { useApi } from '../lib/api';
 
-import { pageMargins } from '../ArticleBody';
-
 const thinGreySolid = `1px solid ${palette.neutral[86]}`;
 
 const flexContainer = css`
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
-`;
 
-const mostPopularBody = css`
     ${desktop} {
-        display: flex;
         flex-direction: column;
     }
+
+    ${leftCol} {
+        flex-direction: row;
+    }
+`;
+
+const asideStyles = css`
+    ${leftCol} {
+        width: 150px;
+    }
+
+    ${wide} {
+        width: 230px;
+    }
+`;
+
+const contentStyles = css`
+    display: flex;
+    flex-direction: column;
+
+    ${desktop} {
+        flex-direction: row;
+    }
+`;
+
+const adStyles = css`
+    margin: 0.375rem 0 0 0.625rem;
 `;
 
 const headingStyles = css`
@@ -46,7 +68,6 @@ const headingStyles = css`
 `;
 
 const listContainer = css`
-    max-width: 60rem;
     border-left: ${thinGreySolid};
     border-right: ${thinGreySolid};
 `;
@@ -118,13 +139,6 @@ interface TabType {
     trails: TrailType[];
 }
 
-const adPositioning = css`
-    margin: 0.375rem 20px 0 0.625rem;
-    position: absolute;
-    top: 0;
-    right: 0;
-`;
-
 const hideList = css`
     display: none;
 `;
@@ -149,23 +163,6 @@ const gridContainer = css`
     /* We set left border on the grid container, and then right border on
     the gridItems to prevent borders doubling up */
     border-left: ${thinGreySolid};
-`;
-
-const resetPadding = css`
-    ${desktop} {
-        padding-left: 0px;
-        padding-top: 0px;
-    }
-
-    ${leftCol} {
-        padding-left: 0px;
-        padding-top: 0px;
-    }
-
-    ${wide} {
-        padding-left: 0px;
-        padding-top: 0px;
-    }
 `;
 
 interface Props {
@@ -204,123 +201,94 @@ export const MostViewed = ({ sectionName, config }: Props) => {
             data-link-name={'most-viewed'}
             data-component={'most-viewed'}
         >
-            <div className={cx(pageMargins, resetPadding)}>
-                <header>
-                    <h2 className={headingStyles}>Most popular</h2>
-                    <div className={mostPopularBody}>
-                        <div className={listContainer}>
-                            {data && data.length > 1 && (
-                                <ul className={tabsContainer} role="tablist">
-                                    {data.map((tab: TabType, i: number) => (
-                                        <li
-                                            className={cx(listTab, {
-                                                [selectedListTab]:
-                                                    i === selectedTabIndex,
-                                                [unselectedListTab]:
-                                                    i !== selectedTabIndex,
-                                                [firstTab]: i === 0,
-                                            })}
-                                            role="tab"
-                                            aria-selected={
-                                                i === selectedTabIndex
-                                            }
-                                            aria-controls={`tabs-popular-${i}`}
-                                            id={`tabs-popular-${i}-tab`}
-                                            key={`tabs-popular-${i}-tab`}
-                                        >
-                                            <button
-                                                className={tabButton}
-                                                onClick={() =>
-                                                    setSelectedTabIndex(i)
-                                                }
-                                            >
-                                                <span
-                                                    className={css`
-                                                        ${screenReaderOnly};
-                                                    `}
-                                                >
-                                                    Most viewed{' '}
-                                                </span>
-                                                <span // tslint:disable-line:react-no-dangerous-html
-                                                    // "Across The Guardian" has a non-breaking space entity between "The" and "Guardian"
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: tab.heading,
-                                                    }}
-                                                />
-                                            </button>
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </div>
-                        <div>
-                            {data &&
-                                data.map(({ trails, heading }, i: number) => (
-                                    <ol
-                                        className={cx(gridContainer, {
-                                            [hideList]: i !== selectedTabIndex,
+            <section className={asideStyles}>
+                <h2 className={headingStyles}>Most popular</h2>
+            </section>
+            <section className={contentStyles}>
+                <div>
+                    <div className={listContainer}>
+                        {data && data.length > 1 && (
+                            <ul className={tabsContainer} role="tablist">
+                                {data.map((tab: TabType, i: number) => (
+                                    <li
+                                        className={cx(listTab, {
+                                            [selectedListTab]:
+                                                i === selectedTabIndex,
+                                            [unselectedListTab]:
+                                                i !== selectedTabIndex,
+                                            [firstTab]: i === 0,
                                         })}
-                                        id={`tabs-popular-${i}`}
-                                        key={`tabs-popular-${i}`}
-                                        role="tabpanel"
-                                        aria-labelledby={`tabs-popular-${i}-tab`}
-                                        data-link-name={heading}
-                                        data-testid={heading}
-                                        data-link-context={`most-read/${sectionName}`}
+                                        role="tab"
+                                        aria-selected={i === selectedTabIndex}
+                                        aria-controls={`tabs-popular-${i}`}
+                                        id={`tabs-popular-${i}-tab`}
+                                        key={`tabs-popular-${i}-tab`}
                                     >
-                                        <TrailItem
-                                            trail={trails[0]}
-                                            position={1}
-                                        />
-                                        <TrailItem
-                                            trail={trails[1]}
-                                            position={2}
-                                        />
-                                        <TrailItem
-                                            trail={trails[2]}
-                                            position={3}
-                                        />
-                                        <TrailItem
-                                            trail={trails[3]}
-                                            position={4}
-                                        />
-                                        <TrailItem
-                                            trail={trails[4]}
-                                            position={5}
-                                        />
-                                        <TrailItem
-                                            trail={trails[5]}
-                                            position={6}
-                                        />
-                                        <TrailItem
-                                            trail={trails[6]}
-                                            position={7}
-                                        />
-                                        <TrailItem
-                                            trail={trails[7]}
-                                            position={8}
-                                        />
-                                        <TrailItem
-                                            trail={trails[8]}
-                                            position={9}
-                                        />
-                                        <TrailItem
-                                            trail={trails[9]}
-                                            position={10}
-                                        />
-                                    </ol>
+                                        <button
+                                            className={tabButton}
+                                            onClick={() =>
+                                                setSelectedTabIndex(i)
+                                            }
+                                        >
+                                            <span
+                                                className={css`
+                                                    ${screenReaderOnly};
+                                                `}
+                                            >
+                                                Most viewed{' '}
+                                            </span>
+                                            <span // tslint:disable-line:react-no-dangerous-html
+                                                // "Across The Guardian" has a non-breaking space entity between "The" and "Guardian"
+                                                dangerouslySetInnerHTML={{
+                                                    __html: tab.heading,
+                                                }}
+                                            />
+                                        </button>
+                                    </li>
                                 ))}
-                        </div>
+                            </ul>
+                        )}
                     </div>
-                </header>
-            </div>
-            <div className={adPositioning}>
-                <AdSlot
-                    asps={namedAdSlotParameters('most-popular')}
-                    config={config}
-                    className={''}
-                />
-            </div>
+                    <div>
+                        {data &&
+                            data.map(({ trails, heading }, i: number) => (
+                                <ol
+                                    className={cx(gridContainer, {
+                                        [hideList]: i !== selectedTabIndex,
+                                    })}
+                                    id={`tabs-popular-${i}`}
+                                    key={`tabs-popular-${i}`}
+                                    role="tabpanel"
+                                    aria-labelledby={`tabs-popular-${i}-tab`}
+                                    data-link-name={heading}
+                                    data-testid={heading}
+                                    data-link-context={`most-read/${sectionName}`}
+                                >
+                                    <TrailItem trail={trails[0]} position={1} />
+                                    <TrailItem trail={trails[1]} position={2} />
+                                    <TrailItem trail={trails[2]} position={3} />
+                                    <TrailItem trail={trails[3]} position={4} />
+                                    <TrailItem trail={trails[4]} position={5} />
+                                    <TrailItem trail={trails[5]} position={6} />
+                                    <TrailItem trail={trails[6]} position={7} />
+                                    <TrailItem trail={trails[7]} position={8} />
+                                    <TrailItem trail={trails[8]} position={9} />
+                                    <TrailItem
+                                        trail={trails[9]}
+                                        position={10}
+                                    />
+                                </ol>
+                            ))}
+                    </div>
+                </div>
+                <div className={adStyles}>
+                    <AdSlot
+                        asps={namedAdSlotParameters('most-popular')}
+                        config={config}
+                        className={''}
+                    />
+                </div>
+            </section>
         </div>
     );
 };
