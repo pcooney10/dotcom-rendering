@@ -10,21 +10,16 @@ import { Trails } from './Trails';
 
 import { useApi } from '../lib/api';
 
-const flexContainer = css`
+const stackBelow = (breakpoint: string) => css`
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 
-    ${desktop} {
-        flex-direction: column;
-    }
-
-    ${leftCol} {
+    ${breakpoint} {
         flex-direction: row;
     }
 `;
 
-const asideStyles = css`
+const asideWidth = css`
     ${leftCol} {
         width: 150px;
     }
@@ -32,19 +27,6 @@ const asideStyles = css`
     ${wide} {
         width: 230px;
     }
-`;
-
-const contentStyles = css`
-    display: flex;
-    flex-direction: column;
-
-    ${desktop} {
-        flex-direction: row;
-    }
-`;
-
-const adStyles = css`
-    margin: 0.375rem 0 0 0.625rem;
 `;
 
 const headingStyles = css`
@@ -102,16 +84,20 @@ export const MostViewed = ({ sectionName, config, pillar }: Props) => {
 
     return (
         <div
-            className={flexContainer}
+            className={stackBelow(leftCol)}
             data-link-name={'most-viewed'}
             data-component={'most-viewed'}
         >
-            <section className={asideStyles}>
+            <section className={asideWidth}>
                 <h2 className={headingStyles}>Most popular</h2>
             </section>
-            <section className={contentStyles}>
+            <section className={stackBelow(desktop)}>
                 <Trails data={data} sectionName={sectionName} pillar={pillar} />
-                <div className={adStyles}>
+                <div
+                    className={css`
+                        margin: 0.375rem 0 0 0.625rem;
+                    `}
+                >
                     <AdSlot
                         asps={namedAdSlotParameters('most-popular')}
                         config={config}
