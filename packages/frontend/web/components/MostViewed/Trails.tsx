@@ -43,7 +43,7 @@ const firstTab = css`
 
 const selectedListTab = (pillar: Pillar) => css`
     /* TODO: Using a pseudo selector here could be faster? */
-    box-shadow: inset 0px 4px 0px 0px ${pillar && pillarPalette[pillar].dark};
+    box-shadow: inset 0px 4px 0px 0px ${pillar && pillarPalette[pillar].main};
     transition: box-shadow 0.3s ease-in-out;
 `;
 
