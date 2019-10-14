@@ -31,7 +31,7 @@ const scriptPath = package =>
 
 module.exports = ({ page }) => ({
     entry: {
-        sentry: scriptPath('sentry'),
+        // sentry: scriptPath('sentry'),
         ga: scriptPath('ga'),
         ophan: scriptPath('ophan'),
         react: scriptPath('react'),

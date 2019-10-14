@@ -1,8 +1,8 @@
 import React from 'react';
 import { hydrate as hydrateCSS } from 'emotion';
 import { hydrate as hydrateApp } from 'react-dom';
-import { Article } from '@frontend/web/pages/Article';
 import { startup } from '@frontend/web/browser/startup';
+import { App } from '@frontend/web/components/App';
 
 const init = (): Promise<void> => {
     const { cssIDs, data } = window.guardian.app;
@@ -19,7 +19,7 @@ const init = (): Promise<void> => {
             hydrateCSS(cssIDs);
         }
 
-        hydrateApp(React.createElement(Article, { data }), container);
+        hydrateApp(React.createElement(App, { data }), container);
     }
 
     return Promise.resolve();
