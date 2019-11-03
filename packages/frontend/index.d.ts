@@ -8,6 +8,8 @@ interface ArticleProps {
     config: ConfigType;
 }
 
+type ThemeType = {};
+
 // Pillars are used for styling
 // RealPillars have Pillar palette colours
 // FakePillars allow us to make modifications to style based on rules outside of the pillar of an article
