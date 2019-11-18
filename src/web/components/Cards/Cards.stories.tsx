@@ -534,15 +534,16 @@ export const Related = () => (
                         {
                             linkTo:
                                 '/society/2019/nov/14/witchcraft-and-black-magic-contribute-to-increase-in-child-abuse',
-                            pillar: 'sport',
+                            pillar: 'opinion',
                             headline: {
                                 headlineString: 'Let us ride to Camelot!',
                                 size: 'tiny',
-                                pillar: 'news',
+                                pillar: 'opinion',
                                 kicker: {
                                     text: 'Monty Python',
-                                    pillar: 'news',
+                                    pillar: 'opinion',
                                 },
+                                showQuotes: true,
                             },
                             webPublicationDate: '2019-11-11T09:45:30.000Z',
                         },
@@ -622,16 +623,17 @@ export const Quad = () => (
                         {
                             linkTo:
                                 '/society/2019/nov/14/witchcraft-and-black-magic-contribute-to-increase-in-child-abuse',
-                            pillar: 'news',
+                            pillar: 'opinion',
                             headline: {
                                 headlineString:
                                     "We shall say 'Ni' again to you, if you do not appease us",
                                 size: 'xxsmall',
-                                pillar: 'news',
+                                pillar: 'opinion',
                                 kicker: {
                                     text: 'Holy Grail',
-                                    pillar: 'news',
+                                    pillar: 'opinion',
                                 },
+                                showQuotes: true,
                             },
                             webPublicationDate: '2019-11-11T09:45:30.000Z',
                             image: {

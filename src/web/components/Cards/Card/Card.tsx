@@ -5,12 +5,15 @@ import { palette } from '@guardian/src-foundations';
 import { SmallHeadline } from '@frontend/web/components/SmallHeadline';
 import { Standfirst } from '@frontend/web/components/Standfirst';
 import { ImageComponent } from '@frontend/web/components/elements/ImageComponent';
+import { Flex } from '@frontend/web/components/Flex';
+import { GuardianLines } from '@frontend/web/components/GuardianLines';
 
 import { ContentWrapper } from './components/ContentWrapper';
 import { HeadlineWrapper } from './components/HeadlineWrapper';
 import { CardLayout } from './components/CardLayout';
 import { ImageWrapper } from './components/ImageWrapper';
 import { StandfirstWrapper } from './components/StandfirstWrapper';
+import { LinesWrapper } from './components/LinesWrapper';
 import { TopBar } from './components/TopBar';
 import { CardLink } from './components/CardLink';
 import { CardListItem } from './components/CardListItem';
@@ -67,12 +70,19 @@ export const Card = ({
 
     const spaceContent = !image;
 
+    const isOpinion = pillar === 'opinion';
+
     return (
         <CardListItem percentage={percentage}>
             <CardLink
                 linkTo={linkTo}
-                backgroundColour={palette.neutral[97]}
-                backgroundOnHover={palette.neutral[93]}
+                backgroundColour={
+                    isOpinion ? palette.opinion.faded : palette.neutral[97]
+                }
+                backgroundOnHover={
+                    // Should be '#FDF0E8'
+                    isOpinion ? palette.opinion.faded : palette.neutral[93]
+                }
             >
                 <TopBar topBarColour={palette[pillar].main}>
                     <CardLayout imagePosition={image && image.position}>
@@ -102,13 +112,22 @@ export const Card = ({
                                             />
                                         </StandfirstWrapper>
                                     )}
-                                    {webPublicationDate && (
-                                        <CardAge
-                                            webPublicationDate={
-                                                webPublicationDate
-                                            }
-                                        />
-                                    )}
+                                    <Flex direction="row">
+                                        <>
+                                            {isOpinion && (
+                                                <LinesWrapper>
+                                                    <GuardianLines pillar="opinion" />
+                                                </LinesWrapper>
+                                            )}
+                                            {webPublicationDate && (
+                                                <CardAge
+                                                    webPublicationDate={
+                                                        webPublicationDate
+                                                    }
+                                                />
+                                            )}
+                                        </>
+                                    </Flex>
                                 </div>
                             </ContentWrapper>
                         </>
