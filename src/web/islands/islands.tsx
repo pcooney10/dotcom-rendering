@@ -8,7 +8,7 @@ import { MostViewedRightWrapper } from '@frontend/web/components/MostViewed/Most
 import { ShareCount } from '@frontend/web/components/ShareCount';
 import { RichLinkComponent } from '@frontend/web/components/elements/RichLinkComponent';
 import { ReaderRevenueLinks } from '@frontend/web/components/ReaderRevenueLinks';
-import { CookieBanner } from '@frontend/web/components/CookieBanner';
+import { CMP } from '@frontend/web/components/CMP';
 
 type IslandProps =
     | {
@@ -126,9 +126,9 @@ export const hydrateIslands = (CAPI: CAPIType, NAV: NavType) => {
             root: 'reader-revenue-links-footer',
         },
         {
-            component: CookieBanner,
+            component: CMP,
             props: {},
-            root: 'cookie-banner',
+            root: 'cmp',
         },
     ];
 

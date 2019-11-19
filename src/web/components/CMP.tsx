@@ -1,0 +1,42 @@
+import React, { Component } from 'react';
+import { canShow } from '@guardian/consent-management-platform';
+import { ConsentManagementPlatform } from '@guardian/consent-management-platform/lib/ConsentManagementPlatform';
+
+export class CMP extends Component<{}, { show: boolean }> {
+    constructor(props: {}) {
+        super(props);
+
+        this.state = {
+            show: false,
+        };
+    }
+
+    public componentDidMount() {
+        if (canShow()) {
+            this.setState({ show: true });
+        }
+    }
+
+    public render() {
+        if (!this.state.show) {
+            return null;
+        }
+
+        const props = {
+            source: 'dcr',
+            onClose: () => {
+                this.setState({ show: false });
+            },
+            fontFamilies: {
+                headlineSerif: "GH Guardian Headline, Georgia, serif",
+                bodySerif: "GuardianTextEgyptian, Georgia, serif",
+                bodySans:
+                    "GuardianTextSans, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif",
+            },
+        };
+
+        return (
+            <ConsentManagementPlatform {...props} />
+        );
+    }
+}
