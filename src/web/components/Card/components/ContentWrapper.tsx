@@ -8,7 +8,7 @@ const sizingStyles = css`
 `;
 
 const coverageStyles = (percentage: string) => css`
-    flex-basis: ${percentage && percentage};
+    ${percentage ? `flex-basis: ${percentage && percentage};` : `flex-grow: 1;`}
 `;
 
 const paddingStyles = css`
@@ -16,28 +16,17 @@ const paddingStyles = css`
     padding-right: 5px;
 `;
 
-const spacingStyles = css`
-    flex-grow: 1;
-    flex-shrink: 0;
-`;
-
 type Props = {
     children: JSXElements;
     percentage?: CardPercentageType;
-    spaceContent?: boolean;
 };
 
-export const ContentWrapper = ({
-    children,
-    percentage,
-    spaceContent,
-}: Props) => (
+export const ContentWrapper = ({ children, percentage }: Props) => (
     <div
         className={cx(
             sizingStyles,
             percentage && coverageStyles(percentage),
             paddingStyles,
-            spaceContent && spacingStyles,
         )}
     >
         {children}
