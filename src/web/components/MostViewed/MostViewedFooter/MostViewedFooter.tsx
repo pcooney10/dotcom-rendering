@@ -90,7 +90,7 @@ function buildSectionUrl(sectionName?: string) {
     const sectionsWithoutPopular = ['info', 'global'];
     const hasSection =
         sectionName && !sectionsWithoutPopular.includes(sectionName);
-    const endpoint: string = `/most-read${
+    const endpoint = `/most-read${
         hasSection ? `/${sectionName}` : ''
     }.json`;
 
@@ -131,7 +131,7 @@ export const MostViewedFooter = ({ config, sectionName, pillar }: Props) => {
                             <AdSlot
                                 asps={namedAdSlotParameters('mostpop')}
                                 config={config}
-                                className={''}
+                                className=""
                             />
                         </div>
                     </section>

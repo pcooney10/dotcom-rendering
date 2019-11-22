@@ -85,7 +85,7 @@ export const MostViewedRightItem = ({ trail }: Props) => {
             <a
                 className={linkTagStyles}
                 href={trail.url}
-                data-link-name={'article'}
+                data-link-name="article"
                 ref={hoverRef}
             >
                 <div className={lineWrapperStyles}>

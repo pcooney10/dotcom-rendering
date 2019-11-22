@@ -20,7 +20,7 @@ interface Props {
 }
 
 export const MostViewedRight = ({ limitItems = 5 }: Props) => {
-    const endpointUrl: string =
+    const endpointUrl =
         'https://api.nextgen.guardianapps.co.uk/most-read-geo.json?dcr=true';
     const { data, error } = useApi<any>(endpointUrl);
 
