@@ -183,9 +183,10 @@ export class Dropdown extends React.Component<
     }
 
     public render() {
-        const { label, links } = this.props;
+        const { label, links, id, dataLinkName } = this.props;
+        const { isExpanded, noJS } = this.state;
 
-        if (this.state.isExpanded) {
+        if (isExpanded) {
             const removeListeners = () => {
                 // eslint-disable-next-line @typescript-eslint/no-use-before-define
                 document.removeEventListener('keydown', dismissOnEsc);
@@ -216,20 +217,20 @@ export class Dropdown extends React.Component<
 
         // needs to be unique to allow multiple dropdowns on same page
         // this should be unique because JS is single-threaded
-        const dropdownID = `dropbox-id-${this.props.id}`;
-        const checkboxID = `checkbox-id-${this.props.id}`;
+        const dropdownID = `dropbox-id-${id}`;
+        const checkboxID = `checkbox-id-${id}`;
 
         return (
             <>
-                {this.state.noJS ? (
+                {noJS ? (
                     <label
                         htmlFor={checkboxID}
                         className={cx({
                             [button]: true,
-                            [buttonExpanded]: this.state.isExpanded,
+                            [buttonExpanded]: isExpanded,
                         })}
                         aria-controls={dropdownID}
-                        aria-expanded={this.state.isExpanded ? 'true' : 'false'}
+                        aria-expanded={isExpanded ? 'true' : 'false'}
                         role="button"
                     >
                         <input
@@ -249,11 +250,11 @@ export class Dropdown extends React.Component<
                         onClick={this.boundToggle}
                         className={cx({
                             [button]: true,
-                            [buttonExpanded]: this.state.isExpanded,
+                            [buttonExpanded]: isExpanded,
                         })}
                         aria-controls={dropdownID}
-                        aria-expanded={this.state.isExpanded ? 'true' : 'false'}
-                        data-link-name={this.props.dataLinkName}
+                        aria-expanded={isExpanded ? 'true' : 'false'}
+                        data-link-name={dataLinkName}
                     >
                         {label}
                     </button>
@@ -263,7 +264,7 @@ export class Dropdown extends React.Component<
                     id={dropdownID}
                     className={cx({
                         [ul]: true,
-                        [ulExpanded]: this.state.isExpanded,
+                        [ulExpanded]: isExpanded,
                     })}
                 >
                     {links.map((l, index) => (
