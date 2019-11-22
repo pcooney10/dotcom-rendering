@@ -45,7 +45,7 @@ describe('MostViewedFooter', () => {
         useApi.mockReset();
     });
 
-    it('should call the api and render the response as expected', async () => {
+    it('should call the api and render the response as expected', () => {
         useApi.mockReturnValue(responseWithTwoTabs);
 
         const { getByText, getAllByText, getByTestId } = render(
@@ -77,7 +77,7 @@ describe('MostViewedFooter', () => {
         expect(getByText('Across The Guardian')).toBeInTheDocument();
     });
 
-    it('should change the items shown when the associated tab is clicked', async () => {
+    it('should change the items shown when the associated tab is clicked', () => {
         useApi.mockReturnValue(responseWithTwoTabs);
 
         const { getByTestId, getByText } = render(
@@ -106,7 +106,7 @@ describe('MostViewedFooter', () => {
         expect(getByTestId(secondHeading)).toHaveStyle(HIDDEN);
     });
 
-    it('should not show the tab menu when there is only one group of tabs', async () => {
+    it('should not show the tab menu when there is only one group of tabs', () => {
         useApi.mockReturnValue(responseWithOneTab);
 
         const { queryByText } = render(
@@ -123,7 +123,7 @@ describe('MostViewedFooter', () => {
     });
 
     // TODO: Restore this once the component has this feature added to it
-    it.skip('should show a byline when this property is set to true', async () => {
+    it.skip('should show a byline when this property is set to true', () => {
         useApi.mockReturnValue(responseWithTwoTabs);
 
         const { getByText } = render(
