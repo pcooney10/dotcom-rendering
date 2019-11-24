@@ -1,18 +1,18 @@
 import React from 'react';
 import { css } from 'emotion';
+import { useTheme } from 'emotion-theming';
 
-import { palette } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
 
 import ClockIcon from '@frontend/static/icons/clock.svg';
 
 import { makeRelativeDate } from '@frontend/web/components/lib/dateTime';
 
-const ageStyles = css`
+const ageStyles = (ageColour: string, clockColour: string) => css`
     ${textSans.xsmall()};
-    color: ${palette.neutral[60]};
+    color: ${clockColour};
     svg {
-        fill: ${palette.neutral[46]};
+        fill: ${clockColour};
         margin-bottom: -1px;
         height: 11px;
         width: 11px;
@@ -25,6 +25,8 @@ type Props = {
 };
 
 export const CardAge = ({ webPublicationDate }: Props) => {
+    const theme = useTheme<ThemeType>();
+
     const displayString = makeRelativeDate(
         new Date(webPublicationDate).getTime(),
         {
@@ -37,7 +39,9 @@ export const CardAge = ({ webPublicationDate }: Props) => {
     }
 
     return (
-        <span className={ageStyles}>
+        <span
+            className={ageStyles(theme.card.ageColour, theme.card.clockColour)}
+        >
             <ClockIcon />
             <time dateTime={webPublicationDate}>{displayString}</time>
         </span>

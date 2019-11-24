@@ -1,8 +1,7 @@
 import React from 'react';
+import { ThemeProvider } from 'emotion-theming';
 
-import { palette } from '@guardian/src-foundations';
-
-import { SmallHeadline } from '@frontend/web/components/SmallHeadline';
+import { CardHeadline } from '@frontend/web/components/CardHeadline';
 import { Standfirst } from '@frontend/web/components/Standfirst';
 import { ImageComponent } from '@frontend/web/components/elements/ImageComponent';
 
@@ -14,6 +13,8 @@ import { StandfirstWrapper } from './components/StandfirstWrapper';
 import { TopBar } from './components/TopBar';
 import { CardLink } from './components/CardLink';
 import { CardAge } from './components/CardAge';
+
+import { getCardTheme } from './lib/cardTheme';
 
 type CoveragesType = {
     image: {
@@ -50,6 +51,7 @@ const coverages: CoveragesType = {
 
 export const Card = ({
     linkTo,
+    designType = 'Article',
     pillar,
     headline,
     showDivider = false,
@@ -68,50 +70,65 @@ export const Card = ({
 
     const spaceContent = !image;
 
+    const cardTheme = getCardTheme({
+        designType,
+        pillar,
+    });
+
     return (
-        <CardLink
-            linkTo={linkTo}
-            backgroundColour={palette.neutral[97]}
-            backgroundOnHover={palette.neutral[93]}
-        >
-            <TopBar topBarColour={palette[pillar].main}>
-                <CardLayout imagePosition={image && image.position}>
-                    <>
-                        {image && (
-                            <ImageWrapper percentage={imageCoverage}>
-                                <ImageComponent
-                                    element={image.element}
-                                    pillar={pillar}
-                                    hideCaption={true}
-                                />
-                            </ImageWrapper>
-                        )}
-                        <ContentWrapper
-                            percentage={contentCoverage}
-                            spaceContent={spaceContent}
-                        >
-                            <HeadlineWrapper>
-                                <SmallHeadline {...headline} />
-                            </HeadlineWrapper>
-                            <div>
-                                {standfirst && (
-                                    <StandfirstWrapper>
-                                        <Standfirst
-                                            pillar={pillar}
-                                            standfirst={standfirst}
-                                        />
-                                    </StandfirstWrapper>
-                                )}
-                                {webPublicationDate && (
-                                    <CardAge
-                                        webPublicationDate={webPublicationDate}
+        <ThemeProvider theme={cardTheme}>
+            <CardLink linkTo={linkTo}>
+                <TopBar>
+                    <CardLayout imagePosition={image && image.position}>
+                        <>
+                            {image && (
+                                <ImageWrapper percentage={imageCoverage}>
+                                    <ImageComponent
+                                        element={image.element}
+                                        pillar={pillar}
+                                        hideCaption={true}
                                     />
-                                )}
-                            </div>
-                        </ContentWrapper>
-                    </>
-                </CardLayout>
-            </TopBar>
-        </CardLink>
+                                </ImageWrapper>
+                            )}
+                            <ContentWrapper
+                                percentage={contentCoverage}
+                                spaceContent={spaceContent}
+                            >
+                                <HeadlineWrapper>
+                                    <CardHeadline
+                                        headlineString={headline.headlineString}
+                                        pillar={headline.pillar}
+                                        showUnderline={headline.showUnderline}
+                                        kicker={headline.kicker}
+                                        showQuotes={headline.showQuotes}
+                                        size={headline.size}
+                                        linkTo={
+                                            headline.link && headline.link.to
+                                        }
+                                    />
+                                </HeadlineWrapper>
+                                <div>
+                                    {standfirst && (
+                                        <StandfirstWrapper>
+                                            <Standfirst
+                                                pillar={pillar}
+                                                standfirst={standfirst}
+                                            />
+                                        </StandfirstWrapper>
+                                    )}
+                                    {webPublicationDate && (
+                                        <CardAge
+                                            webPublicationDate={
+                                                webPublicationDate
+                                            }
+                                        />
+                                    )}
+                                </div>
+                            </ContentWrapper>
+                        </>
+                    </CardLayout>
+                </TopBar>
+            </CardLink>
+        </ThemeProvider>
     );
 };

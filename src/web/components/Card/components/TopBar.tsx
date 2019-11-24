@@ -1,34 +1,36 @@
 import React from 'react';
 import { css } from 'emotion';
+import { useTheme } from 'emotion-theming';
 
 type Props = {
     children: JSXElements;
-    topBarColour: string;
 };
 
-export const TopBar = ({ children, topBarColour }: Props) => (
-    <div
-        className={css`
-            display: flex;
-            width: 100%;
+const topBarStyles = (topbarColour: string) => css`
+    display: flex;
+    width: 100%;
 
-            /* We absolutely position the 1 pixel top bar below
-               so this is required here */
-            position: relative;
+    /* We absolutely position the 1 pixel top bar below
+so this is required here */
+    position: relative;
 
-            /* Styling for top bar */
-            :before {
-                background-color: ${topBarColour};
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 1px;
-                z-index: 2;
-            }
-        `}
-    >
-        {children}
-    </div>
-);
+    /* Styling for top bar */
+    :before {
+        background-color: ${topbarColour};
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        z-index: 2;
+    }
+`;
+
+export const TopBar = ({ children }: Props) => {
+    const theme = useTheme<ThemeType>();
+
+    return (
+        <div className={topBarStyles(theme.card.topbarColour)}>{children}</div>
+    );
+};

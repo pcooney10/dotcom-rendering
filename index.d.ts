@@ -259,6 +259,7 @@ type SmallHeadlineSize = 'tiny' | 'xxsmall' | 'xsmall';
 
 interface CardType {
     linkTo: string;
+    designType?: DesignType;
     pillar: Pillar;
     headline: SmallHeadlineType;
     showDivider?: boolean;
@@ -356,6 +357,31 @@ type DesignType =
 // The return type looks like: { Feature: any, Live: any, ...}
 // and can be used to add TypeSafety when needing to override a style in a designType
 type DesignTypesObj = { [key in DesignType]: any };
+
+// ----------- //
+// Theme Types //
+// ----------- //
+
+interface ThemeType {
+    card: CardTheme;
+    kicker: KickerTheme;
+}
+
+type CardTheme = {
+    topbarColour: string;
+    backgroundColour: string;
+    backgroundOnHover: string;
+    fontColour: string;
+    headlineColour: string;
+    kickerColour: string;
+    headlineUnderlined: boolean;
+    ageColour: string;
+    clockColour: string;
+};
+
+type KickerTheme = {
+    colour: string;
+};
 
 // ----------------- //
 // General DataTypes //

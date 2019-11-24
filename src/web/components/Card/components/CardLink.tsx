@@ -1,5 +1,6 @@
 import React from 'react';
 import { css } from 'emotion';
+import { useTheme } from 'emotion-theming';
 
 const linkStyles = ({
     backgroundColour,
@@ -36,23 +37,20 @@ const linkStyles = ({
 type Props = {
     children: JSXElements;
     linkTo: string;
-    backgroundColour: string;
-    backgroundOnHover: string;
 };
 
-export const CardLink = ({
-    children,
-    linkTo,
-    backgroundColour,
-    backgroundOnHover,
-}: Props) => (
-    <a
-        href={linkTo}
-        className={linkStyles({
-            backgroundColour,
-            backgroundOnHover,
-        })}
-    >
-        {children}
-    </a>
-);
+export const CardLink = ({ children, linkTo }: Props) => {
+    const theme = useTheme<ThemeType>();
+
+    return (
+        <a
+            href={linkTo}
+            className={linkStyles({
+                backgroundColour: theme.card.backgroundColour,
+                backgroundOnHover: theme.card.backgroundOnHover,
+            })}
+        >
+            {children}
+        </a>
+    );
+};
