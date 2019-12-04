@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { canShow } from '@guardian/consent-management-platform';
+import { shouldShow } from '@guardian/consent-management-platform';
 import { ConsentManagementPlatform } from '@guardian/consent-management-platform/lib/ConsentManagementPlatform';
 
 export class CMP extends Component<{}, { show: boolean }> {
@@ -12,7 +12,7 @@ export class CMP extends Component<{}, { show: boolean }> {
     }
 
     public componentDidMount() {
-        if (canShow()) {
+        if (shouldShow()) {
             this.setState({ show: true });
         }
     }
@@ -28,15 +28,13 @@ export class CMP extends Component<{}, { show: boolean }> {
                 this.setState({ show: false });
             },
             fontFamilies: {
-                headlineSerif: "GH Guardian Headline, Georgia, serif",
-                bodySerif: "GuardianTextEgyptian, Georgia, serif",
+                headlineSerif: 'GH Guardian Headline, Georgia, serif',
+                bodySerif: 'GuardianTextEgyptian, Georgia, serif',
                 bodySans:
-                    "GuardianTextSans, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif",
+                    'GuardianTextSans, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif',
             },
         };
 
-        return (
-            <ConsentManagementPlatform {...props} />
-        );
+        return <ConsentManagementPlatform {...props} />;
     }
 }
