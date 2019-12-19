@@ -1,17 +1,36 @@
 import React from 'react';
 import { css, cx } from 'emotion';
 
-import { from, until } from '@guardian/src-foundations/mq';
+import { until } from '@guardian/src-foundations/mq';
 import { Badge } from '@frontend/web/components/Badge';
+
 import { SeriesSectionLink } from './SeriesSectionLink';
 
-const sectionStyles = css`
-    height: 157px;
-    padding-top: 8px;
+const articleTitleStyles = css`
     display: flex;
     flex-direction: row;
-    ${from.leftCol} {
+    order: 1;
+    flex-basis: 229px;
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    padding-top: 8px;
+    padding-right: 10px;
+
+    ${until.wide} {
+        flex-basis: 150px;
         flex-direction: column;
+    }
+
+    ${until.leftCol} {
+        padding-right: 0;
+        flex-basis: 100%;
+        border-right: 0;
+    }
+
+    ${until.phablet} {
+        padding-top: 0;
+        padding-left: 10px;
     }
 `;
 
@@ -44,10 +63,9 @@ const marginTop = css`
 export const ArticleTitle = ({
     CAPI,
     badge,
-    inLeftCol,
     fallbackToSection = true,
 }: Props) => (
-    <div className={cx(inLeftCol && sectionStyles, badge && badgeContainer)}>
+    <div className={cx(articleTitleStyles, badge && badgeContainer)}>
         {badge && (
             <div className={titleBadgeWrapper}>
                 <Badge svgSrc={badge.svgSrc} linkTo={badge.linkTo} />

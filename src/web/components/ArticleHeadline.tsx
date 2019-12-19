@@ -1,6 +1,7 @@
 import React from 'react';
 import { css, cx } from 'emotion';
 
+import { palette } from '@guardian/src-foundations';
 import { pillarPalette } from '@root/src/lib/pillars';
 import { getAgeWarning } from '@root/src/lib/age-warning';
 import { AgeWarning } from '@root/src/web/components/AgeWarning';
@@ -13,7 +14,7 @@ type Props = {
     pillar: Pillar; // Decides headline colour when relevant
     webPublicationDate: string; // Used for age warning
     tags: TagType[]; // Used for age warning
-    isShowcase?: boolean; // Used for Interviews to change headline position
+    layoutType?: LayoutType;
 };
 
 const curly = (x: any) => x;
@@ -158,7 +159,7 @@ const ageWarningMargins = css`
 
 const renderHeadline = (
     designType: DesignType,
-    isShowcase: boolean,
+    layoutType: LayoutType,
     headlineString: string,
     options?: {
         colour?: string;
@@ -224,7 +225,9 @@ const renderHeadline = (
                         invertedFont,
                         invertedWrapper,
                         // We only shift the inverted headline down when main media is showcase
-                        isShowcase ? shiftPosition('down') : shiftSlightly,
+                        layoutType === 'Showcase'
+                            ? shiftPosition('down')
+                            : shiftSlightly,
                         maxWidth,
                     )}
                 >
@@ -266,26 +269,58 @@ const renderHeadline = (
     }
 };
 
+const articleHeadlineStyles = css`
+    padding-left: 10px;
+    order: 2;
+    flex-basis: 620px;
+
+    border-left: 1px solid ${palette.neutral[86]};
+
+    ${until.leftCol} {
+        padding-left: 0;
+        flex-basis: 100%;
+        border-left: 0;
+    }
+
+    ${until.phablet} {
+        padding: 0 10px;
+    }
+`;
+
+const showcaseStyles = css`
+    flex-basis: calc(100% - 230px);
+
+    > h1,
+    > div {
+        max-width: 620px;
+    }
+`;
+
 export const ArticleHeadline = ({
     headlineString,
     designType,
     pillar,
     webPublicationDate,
     tags,
-    isShowcase = false,
+    layoutType = 'Standard',
 }: Props) => {
     const age = getAgeWarning(tags, webPublicationDate);
     return (
-        <>
+        <div
+            className={cx(
+                articleHeadlineStyles,
+                layoutType === 'Showcase' && showcaseStyles,
+            )}
+        >
             {age && (
                 <div className={ageWarningMargins}>
                     <AgeWarning age={age} />
                 </div>
             )}
-            {renderHeadline(designType, isShowcase, headlineString, {
+            {renderHeadline(designType, layoutType, headlineString, {
                 colour: pillarPalette[pillar].dark,
             })}
             {age && <AgeWarning age={age} isScreenReader={true} />}
-        </>
+        </div>
     );
 };

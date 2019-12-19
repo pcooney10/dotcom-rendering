@@ -96,7 +96,7 @@ export const ShowcaseInterview = () => (
                     pillar="culture"
                     webPublicationDate=""
                     tags={[]}
-                    isShowcase={true}
+                    layoutType="Showcase"
                 />
                 <MainMedia
                     hideCaption={true}
